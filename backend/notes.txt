@@ -1,0 +1,18 @@
+/**
+ * entidades: 
+ * ONG;
+ * USER;
+ * CASOS(INCIDENTS).
+ */
+/**
+ * Funções ONG
+ * Login,
+ * Logout,
+ * Cadastro,
+ * Cadastro de caso,
+ * Deletar Caso
+ * # mobile
+ * Lista de casos da ong
+ * Todos os casos
+ * Contato da ong
+ */
