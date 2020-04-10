@@ -1,4 +1,4 @@
-# Be The Hero!
+
 
 ![Pagina inicial do Be the hero](https://i.imgur.com/NIiSknj.jpg)
 Aplicação desenvolvida durante a semana _Omnistack_ da **Rocketseat**
