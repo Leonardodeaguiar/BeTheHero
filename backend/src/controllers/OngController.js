@@ -1,21 +1,28 @@
 const connection = require('../databases/connection');
-const crypto = require('crypto');
+const generateUniqueId = require('../utils/generateUniqueId');
+const bcrypt = require('bcryptjs');
 
 module.exports = {
 	async create(req, res) {
-		const { name, email, whatsapp, city, uf } = req.body;
-		const id = crypto.randomBytes(4).toString('HEX');
-
-		await connection('ongs').insert({
-			id,
-			name,
-			email,
-			whatsapp,
-			city,
-			uf
+		const { name, email, password, whatsapp, city, uf } = req.body;
+		const id = generateUniqueId();
+		bcrypt.hash(password, 8, async (err, result) => {
+			if (err) {
+				res.json({ error: 'Server Error' });
+			}
+			await connection('ongs').insert({
+				id,
+				name,
+				email,
+				password,
+				whatsapp,
+				city,
+				uf
+			});
 		});
-
-		return res.json({ id });
+		return res.json({
+			id
+		});
 	},
 
 	async index(req, res) {

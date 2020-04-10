@@ -1,14 +1,35 @@
 const connection = require('../databases/connection');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
 	async create(req, res) {
-		const { id } = req.body;
-		const ong = await connection('ongs').where('id', id).select('name').first();
+		const { id, password } = req.body;
+		const ong = await connection('ongs').where('id', id).select('id', 'name', 'password').first();
 
 		if (!ong) {
-			return res.status(400).json({ error: 'No ONG found with this id' });
+			return res.status(400).json({ error: 'credentials error!' });
+		} else {
+			bcrypt.compare(password, ong.password, (err, data) => {
+				if (!err) {
+					const token = jwt.sign(
+						{
+							name: ong.name,
+							id: ong.id
+						},
+						process.env.SECRET,
+						{ expiresIn: '7d' },
+						(err, token) => {
+							if (!err) {
+								return res.json({
+									name: ong.name,
+									token
+								});
+							}
+						}
+					);
+				}
+			});
 		}
-
-		return res.json({ name: ong.name });
 	}
 };

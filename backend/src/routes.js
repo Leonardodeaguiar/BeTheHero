@@ -1,9 +1,10 @@
 const express = require('express');
-
+const { celebrate, Segments, Joi } = require('celebrate');
 const OngController = require('./controllers/OngController');
 const IncidentController = require('./controllers/IncidentController');
 const ProfileController = require('./controllers/ProfileControler');
 const SessionControler = require('./controllers/SessionController');
+const auth = require('./middlewares/auth');
 const routes = express.Router();
 
 /**
@@ -40,16 +41,65 @@ const routes = express.Router();
 
 // Ong routes
 routes.get('/ongs', OngController.index);
-routes.post('/ongs', OngController.create);
-routes.delete('/ongs/:id');
+routes.post(
+	'/ongs',
+	celebrate({
+		[Segments.BODY]: Joi.object().keys({
+			name: Joi.string().required(),
+			email: Joi.string().required().email(),
+			password: Joi.string().required().min(5),
+			whatsapp: Joi.string().regex(/^\s*(\d{2}|\d{0})[-. ]?(\d{5}|\d{4})[-. ]?(\d{4})[-. ]?\s*$/).length(11),
+			city: Joi.string().required(),
+			uf: Joi.string().required().length(2)
+		})
+	}),
+	OngController.create
+);
 
 // incidents routes
-routes.get('/incidents', IncidentController.index);
-routes.post('/incidents', IncidentController.create);
-routes.delete('/incidents/:id', IncidentController.delete);
+routes.get(
+	'/incidents',
+	celebrate({
+		[Segments.QUERY]: Joi.object({
+			page: Joi.number()
+		})
+	}),
+	IncidentController.index
+);
+routes.post(
+	'/incidents',
+	auth,
+	celebrate({
+		[Segments.BODY]: Joi.object().keys({
+			title: Joi.string().required(),
+			description: Joi.string().required(),
+			value: Joi.number().required()
+		})
+	}),
+	IncidentController.create
+);
+routes.delete(
+	'/incidents/:id',
+	auth,
+	celebrate({
+		[Segments.PARAMS]: Joi.object().keys({
+			id: Joi.number().required()
+		})
+	}),
+	IncidentController.delete
+);
 
 //profile routes
-routes.get('/profile', ProfileController.index);
+routes.get('/profile', auth, ProfileController.index);
 //session
-routes.post('/session', SessionControler.create);
+routes.post(
+	'/session',
+	celebrate({
+		[Segments.BODY]: Joi.object({
+			id: Joi.string().required(),
+			password: Joi.string().required()
+		})
+	}),
+	SessionControler.create
+);
 module.exports = routes;

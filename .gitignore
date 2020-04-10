@@ -1,0 +1,5 @@
+node_modules
+test
+.env
+notes.txt
+yarn-error.log
