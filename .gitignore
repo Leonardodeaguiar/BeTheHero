@@ -3,3 +3,4 @@ test
 .env
 notes.txt
 yarn-error.log
+*.sqlite
