@@ -12,13 +12,13 @@ module.exports = {
 		} else {
 			bcrypt.compare(password, ong.password, (err, data) => {
 				if (!err) {
-					const token = jwt.sign(
+					jwt.sign(
 						{
 							name: ong.name,
 							id: ong.id
 						},
 						process.env.SECRET,
-						{ expiresIn: '7d' },
+						{ expiresIn: '1d' },
 						(err, token) => {
 							if (!err) {
 								return res.json({

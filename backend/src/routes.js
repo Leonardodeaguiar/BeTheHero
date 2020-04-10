@@ -4,7 +4,7 @@ const OngController = require('./controllers/OngController');
 const IncidentController = require('./controllers/IncidentController');
 const ProfileController = require('./controllers/ProfileControler');
 const SessionControler = require('./controllers/SessionController');
-const auth = require('./middlewares/auth');
+const { auth, id } = require('./middlewares/auth');
 const routes = express.Router();
 
 /**

@@ -41,3 +41,6 @@
 .logon-container section.form form a:hover {
 	opacity: 0.8;
 }
+input[type='password'] {
+	margin-top: 10px;
+}

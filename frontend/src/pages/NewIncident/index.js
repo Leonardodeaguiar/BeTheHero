@@ -6,7 +6,7 @@ import logo from '../../assets/logo.svg';
 import api from '../../services/api';
 
 const NewIncident = () => {
-	const ongId = localStorage.getItem('ongId');
+	const token = `Bearer ${localStorage.getItem('token')}`;
 	const history = useHistory();
 
 	const [ incident, setIncident ] = useState({
@@ -20,7 +20,7 @@ const NewIncident = () => {
 		try {
 			await api.post(`incidents`, incident, {
 				headers: {
-					Authorization: ongId
+					Authorization: token
 				}
 			});
 			history.push('/profile');

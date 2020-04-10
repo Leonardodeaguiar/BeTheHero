@@ -7,7 +7,7 @@ import api from '../../services/api';
 
 const Profile = () => {
 	const ongName = localStorage.getItem('ongName');
-	const ongId = localStorage.getItem('ongId');
+	const token = `Bearer ${localStorage.getItem('token')}`;
 	const history = useHistory();
 	const [ incidents, setIncidents ] = useState([]);
 	useEffect(
@@ -15,24 +15,25 @@ const Profile = () => {
 			api
 				.get('profile', {
 					headers: {
-						Authorization: ongId
+						Authorization: token
 					}
 				})
 				.then((response) => {
+					console.log(response.data);
 					setIncidents(response.data);
 				})
 				.catch((err) => {
 					console.log(err);
 				});
 		},
-		[ ongId ]
+		[ token ]
 	);
 
 	const handleDeleteIncident = async (id) => {
 		try {
 			await api.delete(`incidents/${id}`, {
 				headers: {
-					Authorization: ongId
+					Authorization: token
 				}
 			});
 			setIncidents(incidents.filter((incident) => id !== incident.id));

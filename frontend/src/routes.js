@@ -4,6 +4,7 @@ import Logon from './pages/Logon';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import NewIncident from './pages/NewIncident';
+import { isAuthenticated } from './config/auth';
 
 export default function Routes() {
 	return (
@@ -11,8 +12,16 @@ export default function Routes() {
 			<Switch>
 				<Route exact path="/" component={Logon} />
 				<Route path="/register" component={Register} />
-				<Route path="/profile" component={Profile} />
-				<Route path="/incidents/new" component={NewIncident} />
+				{isAuthenticated() ? (
+					<Route path="/profile" component={Profile} />
+				) : (
+					<Route path="/404" render={<h1>Acho que um de nós não deveria estar aqui!</h1>} />
+				)}
+				{isAuthenticated() ? (
+					<Route path="/incidents/new" component={NewIncident} />
+				) : (
+					<Route path="/404" render={<h1>Acho que um de nós não deveria estar aqui!</h1>} />
+				)}
 			</Switch>
 		</Router>
 	);

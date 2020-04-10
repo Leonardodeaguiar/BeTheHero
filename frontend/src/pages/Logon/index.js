@@ -5,17 +5,25 @@ import './styles.css';
 import heroesImg from '../../assets/heroes.png';
 import logo from '../../assets/logo.svg';
 import api from '../../services/api';
-
 const Logon = () => {
-	const [ id, setID ] = useState('');
+	const [ credentials, setCredentials ] = useState({
+		id: '',
+		password: ''
+	});
 	const history = useHistory();
-
+	const { id, password } = credentials;
+	const handleChange = (event) => {
+		setCredentials({ ...credentials, [event.target.name]: event.target.value });
+	};
 	const handleLogin = async (event) => {
 		event.preventDefault();
 		try {
-			const response = await api.post('session', { id });
-			localStorage.setItem('ongId', id);
+			const response = await api.post('session', {
+				id: id,
+				password: password
+			});
 			localStorage.setItem('ongName', response.data.name);
+			localStorage.setItem('token', response.data.token);
 			history.push('/profile');
 		} catch (err) {
 			alert('Falha no login');
@@ -29,14 +37,13 @@ const Logon = () => {
 				<form onSubmit={handleLogin}>
 					<h1>Faça seu logon</h1>
 
+					<input type="text" value={id} name="id" onChange={handleChange} placeholder="Sua ID" />
 					<input
-						type="text"
-						value={id}
-						name="id"
-						onChange={(e) => {
-							setID(e.target.value);
-						}}
-						placeholder="Sua ID"
+						type="password"
+						value={password}
+						name="password"
+						onChange={handleChange}
+						placeholder="Senha"
 					/>
 					<button className="button" type="submit">
 						Entrar
